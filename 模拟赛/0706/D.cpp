@@ -1,20 +1,27 @@
-// Problem:      P8819 [CSP-S 2022] 星战
+// Problem:      P2512 [HAOI2008]糖果传递
 // Contest:      Luogu
-// URL:          https://www.luogu.com.cn/problem/P8819
-// Memory Limit: 512 MB
-// Time Limit:   2000 ms
-// Created Time: 2023-07-05 10:03:46 
+// URL:          https://www.luogu.com.cn/problem/P2512
+// Memory Limit: 128 MB
+// Time Limit:   1000 ms
+// Created Time: 2023-05-28 20:50:30 
+
+// Problem:      P4016 负载平衡问题
+// Contest:      Luogu
+// URL:          https://www.luogu.com.cn/problem/P4016
+// Memory Limit: 125 MB
+// Time Limit:   1000 ms
+// Created Time: 2023-05-28 20:42:38 
 
 #include <iostream>
 
-#include <ctime>
-#include <random>
+#include <algorithm>
 
 #define i64 long long
 #define endl '\n'
 #define qwq puts("fzy qwq ~");
 
 using namespace std;
+
 #include <cstring>
 namespace bufIO
 {
@@ -56,58 +63,31 @@ namespace bufIO
 }
 using namespace bufIO;
 
-const i64 N = 5e5 + 10;
+const int N = 1e6 + 10;
 
-mt19937 rnd(time(0));
-
-i64 n, m, q;
-i64 opt, u, v;
-i64 r[N], w[N], g[N];
-i64 sum, chk;
+int n, mid;
+int a[N], ave;
+int sum[N];
+i64 all, ans;
 
 int main()
 {
-	read(n, m);
-	for (int i = 1; i <= n; ++i)
-		w[i] = rnd(), chk += w[i];
-	for (int i = 1; i <= m; ++i)
-	{
-		read(u, v);
-		r[v] += w[u];
-		g[v] = r[v];
-		sum += w[u];
-	}
+	read(n); mid = (n >> 1) + 1;
 	
-	read(q);
-	for (int i = 1; i <= q; ++i)
-	{
-		read(opt);
-		if (opt == 1)
-		{
-			read(u, v);
-			r[v] -= w[u];
-			sum -= w[u];
-		}
-		if (opt == 2)
-		{
-			read(v);
-			sum -= r[v];
-			r[v] = 0;
-		}
-		if (opt == 3)
-		{
-			read(u, v);
-			r[v] += w[u];
-			sum += w[u];
-		}
-		if (opt == 4)
-		{
-			read(v);
-			sum += g[v] - r[v];
-			r[v] = g[v];
-		}
-		
-		puts(sum == chk ? "YES" : "NO");
-	}
+	for (int i = 1; i <= n; ++i)
+		read(a[i]), all += a[i];
+	
+	all /= n;
+	
+	for (int i = 1; i <= n; ++i)
+		a[i] = a[i - 1] + all - a[i];
+	
+	sort(a + 1, a + n + 1);
+	nth_element(a + 1, a + mid, a + n + 1);
+	
+	for (int i = 1; i <= n; ++i)
+		ans += abs(a[mid] - a[i]);
+	
+	writeln(ans); flushout();
 	return 0;
 }
